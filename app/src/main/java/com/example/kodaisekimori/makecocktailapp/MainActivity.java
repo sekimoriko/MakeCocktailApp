@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         //スタートボタン
         Button startButton = (Button)findViewById(R.id.start_button);
 
-        //次に遷移
+        //材料選択モードに遷移
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

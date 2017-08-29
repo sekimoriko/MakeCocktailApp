@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SelectActivity"></activity>
+        <activity android:name=".SelectActivity" />
+        <activity android:name=".ShakeActivity"></activity>
     </application>
 
 </manifest>
