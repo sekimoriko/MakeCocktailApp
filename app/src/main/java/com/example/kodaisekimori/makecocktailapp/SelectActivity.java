@@ -46,10 +46,10 @@ public class SelectActivity extends AppCompatActivity {
         shakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Intent intent = new Intent(SelectActivity.this, ShakeActivity.class);
+                Intent intent = new Intent(SelectActivity.this, ShakeActivity.class);
                 // 値渡し書く
-                // startActivity(intent);
-                textView.setText(String.valueOf(factor[0]));
+                startActivity(intent);
+                //textView.setText(String.valueOf(factor[0]));
             }
         });
     }
