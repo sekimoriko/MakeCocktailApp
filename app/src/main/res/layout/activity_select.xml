@@ -4,14 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.kodaisekimori.makecocktailapp.MainActivity">
-
-    <Button
-        android:id="@+id/start_button"
-        android:layout_width="186dp"
-        android:layout_height="69dp"
-        android:text="Start!"
-        tools:layout_editor_absoluteY="221dp"
-        tools:layout_editor_absoluteX="99dp" />
+    tools:context="com.example.kodaisekimori.makecocktailapp.SelectActivity">
 
 </android.support.constraint.ConstraintLayout>
