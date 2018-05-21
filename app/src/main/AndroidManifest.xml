@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SelectActivity" />
-        <activity android:name=".ShakeActivity"></activity>
+        <activity android:name=".ShakeActivity" />
+        <activity android:name=".ResultActivity"></activity>
     </application>
 
 </manifest>

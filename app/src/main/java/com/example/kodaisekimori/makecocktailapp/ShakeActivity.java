@@ -1,6 +1,7 @@
 package com.example.kodaisekimori.makecocktailapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,6 +11,8 @@ import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ShakeActivity extends AppCompatActivity implements SensorEventListener {
@@ -19,6 +22,12 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     private static final int SHAKE_TIMEOUT = 500;
     private static final int SHAKE_DURATION = 100;
     private static final int SHAKE_COUNT = 3;
+
+    //それぞれの色
+    private static final int[][] COLOR = {{200, 0, 0}, {0, 200, 0}, {0, 0, 200}, {200, 200, 0},
+            {0, 200, 200}, {200, 0, 200}};
+
+    private static final int MATERIAL_NUM = 6;
 
     private SensorManager sensorManager;
     private TextView textView, textInfo;
@@ -39,10 +48,41 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
 
     private int shakeSound;
 
+    private int[] color_sum = {0, 0, 0};
+
+    long tmp_now;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
+
+        Button shakeEndButton = (Button)findViewById(R.id.shake_end_button);
+
+        shakeEndButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), ResultActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        int[] color_factor = getIntent().getIntArrayExtra("_factor");
+        int selectMaterialNum = 0;
+
+
+        for(int i = 0; i < MATERIAL_NUM; i++) {
+            if(color_factor[i] == 1) {
+                color_sum[0] += COLOR[i][0];
+                color_sum[1] += COLOR[i][1];
+                color_sum[2] += COLOR[i][2];
+                selectMaterialNum++;
+            }
+        }
+
+        for(int i = 0; i < 3; i++) {
+            color_sum[i] = (int) (color_sum[i] / selectMaterialNum);
+        }
 
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -109,16 +149,18 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
             sensorY = sensorEvent.values[1];
             sensorZ = sensorEvent.values[2];
 
-            String strTmp = "加速度センサー\n"
-                    + " X: " + sensorX + "\n"
-                    + " Y: " + sensorY + "\n"
-                    + " Z: " + sensorZ;
-            textView.setText(strTmp);
+//            String strTmp = "加速度センサー\n"
+//                    + " X: " + sensorX + "\n"
+//                    + " Y: " + sensorY + "\n"
+//                    + " Z: " + sensorZ;
+//            textView.setText(strTmp);
 
             if(flg){
                 //showInfo(sensorEvent);
                 //System.currentTimeMillisを使い現在時刻をミリ秒で取得。
                 long now = System.currentTimeMillis();
+                tmp_now = System.currentTimeMillis();
+
 //最後に動かしてから500ミリ秒経過していたら、連続していないのでカウントを0に戻す。
                 if ( ( now - mLastForce ) > SHAKE_TIMEOUT ) {
                     mShakeCount = 0;
@@ -156,7 +198,21 @@ http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%
 
     //振られたときの処理
     private void onShake() {
+        //音出す
         soundPool.play(shakeSound, 1.0f, 1.0f, 0, 0, 1);
+
+        long current = System.currentTimeMillis();
+//        if((tmp_now - current) > 1000) {
+//            Intent intent = new Intent(getApplication(), ResultActivity.class);
+//            intent.putExtra("_color", color_sum);
+//            startActivity(intent);
+//        }
+        //色変える
+        for(int i = 0; i < 3; i++) {
+            if(color_sum[i] != 255) {
+                color_sum[i] += 1;
+            }
+        }
     }
 
     //加速度表示(デバッグ用)

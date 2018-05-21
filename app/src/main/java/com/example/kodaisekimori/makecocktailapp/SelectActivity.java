@@ -43,11 +43,82 @@ public class SelectActivity extends AppCompatActivity {
             }
         });
 
+        c2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                boolean checked = checkBox.isChecked();
+
+                if(checked) {
+                    factor[1] = 1;
+                }else {
+                    factor[1] = 0;
+                }
+            }
+        });
+
+        c3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                boolean checked = checkBox.isChecked();
+
+                if(checked) {
+                    factor[2] = 1;
+                }else {
+                    factor[2] = 0;
+                }
+            }
+        });
+
+        c4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                boolean checked = checkBox.isChecked();
+
+                if(checked) {
+                    factor[3] = 1;
+                }else {
+                    factor[3] = 0;
+                }
+            }
+        });
+
+        c5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                boolean checked = checkBox.isChecked();
+
+                if(checked) {
+                    factor[4] = 1;
+                }else {
+                    factor[4] = 0;
+                }
+            }
+        });
+
+        c6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox)v;
+                boolean checked = checkBox.isChecked();
+
+                if(checked) {
+                    factor[5] = 1;
+                }else {
+                    factor[5] = 0;
+                }
+            }
+        });
+
         shakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectActivity.this, ShakeActivity.class);
+                Intent intent = new Intent(getApplication(), ShakeActivity.class);
                 // 値渡し書く
+                intent.putExtra("_factor", factor);
                 startActivity(intent);
                 //textView.setText(String.valueOf(factor[0]));
             }
