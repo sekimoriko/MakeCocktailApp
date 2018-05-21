@@ -195,16 +195,18 @@ http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%
                     mLastZ = sensorZ;
                 }
             }
+
         } else if(sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             String str_light = "照度：" + sensorEvent.values[0];
             lightText.setText(str_light);
             if(!isShaking && sensorEvent.values[0] < 30) {
                 isShaking = true;
             } else if(isShaking && sensorEvent.values[0] > 100) {
-                finishShaking = true;
-            } else if(finishShaking) {
+                //finishShaking = true;
                 Intent intent = new Intent(getApplication(), ResultActivity.class);
                 startActivity(intent);
+            } else if(finishShaking) {
+
             }
         }
     }
