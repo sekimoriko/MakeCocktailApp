@@ -8,11 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class ShakeActivity extends AppCompatActivity implements SensorEventListener {
@@ -30,7 +28,7 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     private static final int MATERIAL_NUM = 6;
 
     private SensorManager sensorManager;
-    private TextView textView, textInfo;
+    private TextView textAccel, textInfo;
     private float sensorX;
     private float sensorY;
     private float sensorZ;
@@ -42,6 +40,9 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     private int mShakeCount = 0;
     private long mLastShake;
     private long mLastForce;
+
+    private boolean isShaking = false;
+    private boolean finishShaking = false;
 
     private AudioAttributes audioAttributes;
     private SoundPool soundPool;
@@ -57,15 +58,15 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
 
-        Button shakeEndButton = (Button)findViewById(R.id.shake_end_button);
+//        Button shakeEndButton = (Button)findViewById(R.id.shake_end_button);
 
-        shakeEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), ResultActivity.class);
-                startActivity(intent);
-            }
-        });
+//        shakeEndButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplication(), ResultActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         int[] color_factor = getIntent().getIntArrayExtra("_factor");
         int selectMaterialNum = 0;
@@ -87,10 +88,8 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        textAccel = (TextView) findViewById(R.id.text_accel);
         textInfo = (TextView) findViewById(R.id.text_info);
-
-        // Get an instance of the TextView
-        textView = (TextView) findViewById(R.id.text_view);
 
         audioAttributes = new AudioAttributes.Builder()
                 // USAGE_MEDIA
@@ -126,11 +125,13 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
         super.onResume();
         // Listenerの登録
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
 
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
 //        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
 //        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
-//        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_UI);
     }
 
     //解除する
@@ -143,20 +144,21 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        TextView lightText = (TextView)findViewById(R.id.text_light);
 
         if ( sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER ) {
             sensorX = sensorEvent.values[0];
             sensorY = sensorEvent.values[1];
             sensorZ = sensorEvent.values[2];
 
-//            String strTmp = "加速度センサー\n"
-//                    + " X: " + sensorX + "\n"
-//                    + " Y: " + sensorY + "\n"
-//                    + " Z: " + sensorZ;
-//            textView.setText(strTmp);
+            String strTmp = "加速度センサー\n"
+                    + " X: " + sensorX + "\n"
+                    + " Y: " + sensorY + "\n"
+                    + " Z: " + sensorZ;
+            textAccel.setText(strTmp);
 
             if(flg){
-                //showInfo(sensorEvent);
+//                showInfo(sensorEvent);
                 //System.currentTimeMillisを使い現在時刻をミリ秒で取得。
                 long now = System.currentTimeMillis();
                 tmp_now = System.currentTimeMillis();
@@ -192,6 +194,17 @@ http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%
                     mLastY = sensorY;
                     mLastZ = sensorZ;
                 }
+            }
+        } else if(sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
+            String str_light = "照度：" + sensorEvent.values[0];
+            lightText.setText(str_light);
+            if(!isShaking && sensorEvent.values[0] < 30) {
+                isShaking = true;
+            } else if(isShaking && sensorEvent.values[0] > 100) {
+                finishShaking = true;
+            } else if(finishShaking) {
+                Intent intent = new Intent(getApplication(), ResultActivity.class);
+                startActivity(intent);
             }
         }
     }
