@@ -32,6 +32,7 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
     private ImageView imageCocktail;
     private TextToSpeech tts;
     private static final String TAG = "TestTTS";
+    private boolean slide_flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +137,11 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
 //                    + " Z: " + sensorZ;
 //            textAccel_2.setText(strTmp);
 
-            if(2.0 < sensorX && -0.3 < sensorY && sensorY < 0.3 && 9.0 < sensorZ) {
+            if(2.0 < sensorX && -2.0 < sensorY && sensorY < 2.0 && 9.5 < sensorZ && sensorZ < 10.0) {
+                slide_flag = true;
+            } else if(slide_flag && sensorX < 0.4 && -2.0 < sensorY && sensorY < 2.0 && 9.5 < sensorZ && sensorZ < 10.0) {
                 speachText();
+                slide_flag = false;
             }
         }
     }
