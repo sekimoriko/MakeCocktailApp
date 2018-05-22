@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         //スタートボタン
         Button startButton = (Button)findViewById(R.id.start_button);
+        ImageView bartenderView = (ImageView)findViewById(R.id.bartenderView);
 
         //材料選択モードに遷移
         startButton.setOnClickListener(new View.OnClickListener() {

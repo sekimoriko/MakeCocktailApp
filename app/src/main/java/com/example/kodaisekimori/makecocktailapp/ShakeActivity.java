@@ -48,7 +48,7 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
     private SoundPool soundPool;
 
     private int shakeSound;
-
+    private int[] materials;
     private int[] color_sum = {0, 0, 0};
 
     long tmp_now;
@@ -58,6 +58,7 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
 
+        materials = getIntent().getIntArrayExtra("_factor");
 //        Button shakeEndButton = (Button)findViewById(R.id.shake_end_button);
 
 //        shakeEndButton.setOnClickListener(new View.OnClickListener() {
@@ -68,22 +69,22 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
 //            }
 //        });
 
-        int[] color_factor = getIntent().getIntArrayExtra("_factor");
-        int selectMaterialNum = 0;
-
-
-        for(int i = 0; i < MATERIAL_NUM; i++) {
-            if(color_factor[i] == 1) {
-                color_sum[0] += COLOR[i][0];
-                color_sum[1] += COLOR[i][1];
-                color_sum[2] += COLOR[i][2];
-                selectMaterialNum++;
-            }
-        }
-
-        for(int i = 0; i < 3; i++) {
-            color_sum[i] = (int) (color_sum[i] / selectMaterialNum);
-        }
+//        int[] color_factor = getIntent().getIntArrayExtra("_factor");
+//        int selectMaterialNum = 0;
+//
+//
+//        for(int i = 0; i < MATERIAL_NUM; i++) {
+//            if(color_factor[i] == 1) {
+//                color_sum[0] += COLOR[i][0];
+//                color_sum[1] += COLOR[i][1];
+//                color_sum[2] += COLOR[i][2];
+//                selectMaterialNum++;
+//            }
+//        }
+//
+//        for(int i = 0; i < 3; i++) {
+//            color_sum[i] = (int) (color_sum[i] / selectMaterialNum);
+//        }
 
         // Get an instance of the SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -171,11 +172,6 @@ public class ShakeActivity extends AppCompatActivity implements SensorEventListe
                 if ( ( now - mLastTime ) > TIME_THRESHOLD ) {
                     long diff = now - mLastTime;
 //端末の加速度から前回の加速度＝if ( speed > 350 )を引いたものをMath.absで絶対値にする。それを経過時間で割ったものに10000を掛けて10秒間でどれだけ加速したかを求めているよう。
-/*
-XYZ軸の概念は
-http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%BC%A4%CE%C3%CD%A4%F2%BC%E8%C6%C0%A4%B9%A4%EB
-が参考になりました。
-*/
                     float speed = Math.abs(sensorX + sensorY + sensorZ -
                                     mLastX - mLastY - mLastZ ) / diff * 10000;
 /*350より大きい速度で、振られたのが3回目（以上）でかつ、最後にシェイクを検知してから100ミリ秒以上経っていたら
@@ -204,6 +200,7 @@ http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%
             } else if(isShaking && sensorEvent.values[0] > 100) {
                 //finishShaking = true;
                 Intent intent = new Intent(getApplication(), ResultActivity.class);
+                intent.putExtra("_materials", materials);
                 startActivity(intent);
             } else if(finishShaking) {
 
@@ -215,19 +212,6 @@ http://seesaawiki.jp/w/moonlight_aska/d/%B2%C3%C2%AE%C5%D9%A5%BB%A5%F3%A5%B5%A1%
     private void onShake() {
         //音出す
         soundPool.play(shakeSound, 1.0f, 1.0f, 0, 0, 1);
-
-        long current = System.currentTimeMillis();
-//        if((tmp_now - current) > 1000) {
-//            Intent intent = new Intent(getApplication(), ResultActivity.class);
-//            intent.putExtra("_color", color_sum);
-//            startActivity(intent);
-//        }
-        //色変える
-        for(int i = 0; i < 3; i++) {
-            if(color_sum[i] != 255) {
-                color_sum[i] += 1;
-            }
-        }
     }
 
     //加速度表示(デバッグ用)

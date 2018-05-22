@@ -11,19 +11,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/restart_button"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/cocktailImageView"
+            android:layout_width="256dp"
+            android:layout_height="396dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/drink2_yellow" />
+
+        <TextView
+            android:id="@+id/cocktailNameView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Restart"
-            tools:layout_editor_absoluteX="161dp"
-            tools:layout_editor_absoluteY="504dp" />
+            android:layout_gravity="center_horizontal"
+            android:text="カクテル"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/text_accel_2"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/materialsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/restart_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="Restart"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="504dp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

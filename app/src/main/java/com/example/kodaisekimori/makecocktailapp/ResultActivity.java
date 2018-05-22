@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ResultActivity extends AppCompatActivity implements SensorEventListener, TextToSpeech.OnInitListener {
@@ -22,7 +24,12 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
     private float sensorX;
     private float sensorY;
     private float sensorZ;
+    private int[] materials;
+    private String cocktailName;
     private TextView textAccel_2;
+    private TextView textMaterials;
+    private TextView textCocktail;
+    private ImageView imageCocktail;
     private TextToSpeech tts;
     private static final String TAG = "TestTTS";
 
@@ -35,6 +42,9 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
 
         Button restartButton = (Button)findViewById(R.id.restart_button);
         textAccel_2 = (TextView)findViewById(R.id.text_accel_2);
+        textMaterials = (TextView)findViewById(R.id.materialsView);
+        textCocktail = (TextView)findViewById(R.id.cocktailNameView);
+        imageCocktail = (ImageView)findViewById(R.id.cocktailImageView);
 
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +56,50 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
         });
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        materials = getIntent().getIntArrayExtra("_materials");
+        textMaterials.setText(Arrays.toString(materials));
+
+        int materials_num = 0;
+        for(int i=0; i < materials.length; i++) {
+            materials_num += materials[i];
+        }
+
+        if(materials_num > 2) {
+            cocktailName = "謎";
+            imageCocktail.setImageResource(R.drawable.drink8_purple);
+        } else if(materials[0] == 1 && materials[3] == 1) {
+            cocktailName = "オレンジブロッサム";
+            imageCocktail.setImageResource(R.drawable.drink5_orange);
+        } else if(materials[0] == 1 && materials[4] == 1) {
+            cocktailName = "ジントニック";
+            imageCocktail.setImageResource(R.drawable.drink6_skyblue);
+        } else if(materials[0] == 1 && materials[5] == 1) {
+            cocktailName = "ジンバック";
+            imageCocktail.setImageResource(R.drawable.drink2_yellow);
+        } else if(materials[1] == 1 && materials[3] == 1) {
+            cocktailName = "スクリュードライバー";
+            imageCocktail.setImageResource(R.drawable.drink5_orange);
+        } else if(materials[1] == 1 && materials[4] == 1) {
+            cocktailName = "ウォッカトニック";
+            imageCocktail.setImageResource(R.drawable.drink6_skyblue);
+        } else if(materials[1] == 1 && materials[5] == 1) {
+            cocktailName = "モスコミュール";
+            imageCocktail.setImageResource(R.drawable.drink2_yellow);
+        } else if(materials[2] == 1 && materials[3] == 1) {
+            cocktailName = "テキーラサンライズ";
+            imageCocktail.setImageResource(R.drawable.drink5_orange);
+        } else if(materials[2] == 1 && materials[4] == 1) {
+            cocktailName = "テキーラトニック";
+            imageCocktail.setImageResource(R.drawable.drink6_skyblue);
+        } else if(materials[2] == 1 && materials[5] == 1) {
+            cocktailName = "テキーラバック";
+            imageCocktail.setImageResource(R.drawable.drink2_yellow);
+        } else {
+            cocktailName = "謎";
+            imageCocktail.setImageResource(R.drawable.drink8_purple);
+        }
+        textCocktail.setText(cocktailName);
 
         //int[] getColor = getIntent().getIntArrayExtra("_color");
 
@@ -76,11 +130,11 @@ public class ResultActivity extends AppCompatActivity implements SensorEventList
             sensorY = sensorEvent.values[1];
             sensorZ = sensorEvent.values[2];
 
-            String strTmp = "加速度センサー\n"
-                    + " X: " + sensorX + "\n"
-                    + " Y: " + sensorY + "\n"
-                    + " Z: " + sensorZ;
-            textAccel_2.setText(strTmp);
+//            String strTmp = "加速度センサー\n"
+//                    + " X: " + sensorX + "\n"
+//                    + " Y: " + sensorY + "\n"
+//                    + " Z: " + sensorZ;
+//            textAccel_2.setText(strTmp);
 
             if(2.0 < sensorX && -0.3 < sensorY && sensorY < 0.3 && 9.0 < sensorZ) {
                 speachText();
